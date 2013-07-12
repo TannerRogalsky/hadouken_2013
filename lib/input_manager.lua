@@ -2,13 +2,15 @@ local InputManager = {}
 
 
 -- keyboard input
-MOAIInputMgr.device.keyboard:setCallback(function(unicode, down)
-  if down == true then
-    beholder.trigger("key_down", InputManager.key_map[unicode], unicode)
-  else
-    beholder.trigger("key_up", InputManager.key_map[unicode], unicode)
-  end
-end)
+if MOAIInputMgr.device.keyboard then
+  MOAIInputMgr.device.keyboard:setCallback(function(unicode, down)
+    if down == true then
+      beholder.trigger("key_down", InputManager.key_map[unicode], unicode)
+    else
+      beholder.trigger("key_up", InputManager.key_map[unicode], unicode)
+    end
+  end)
+end
 
 
 -- mouse and touch input
