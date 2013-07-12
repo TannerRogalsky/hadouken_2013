@@ -12,6 +12,13 @@ function Game:initialize()
     beholder.observe("key_up", function(key, unicode) self:key_up(key, unicode) end)
   end)
 
+  self.viewport = MOAIViewport.new()
+  self.viewport:setSize(SCREEN_WIDTH, SCREEN_HEIGHT)
+  self.viewport:setScale (SCREEN_UNITS_X, SCREEN_UNITS_Y)
+
+  self.font = MOAIFont.new ()
+  self.font:loadFromTTF("fonts/arialbd.ttf", "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.?!", 12, 163)
+
   self:gotoState("Main")
 end
 

@@ -11,7 +11,7 @@ dofile("config.lua")
 beholder.observe("key_down", "esc", function()
   os.exit()
 end)
-local game = Game:new()
+game = Game:new()
 
 
 -- main simulation loop
@@ -19,7 +19,7 @@ local mainThread = MOAICoroutine.new ()
 mainThread:run(function()
   while true do
     local dt = MOAISim.getStep()
-    -- game.update(dt)
+    game:update(dt)
     coroutine.yield()
   end
 end)
