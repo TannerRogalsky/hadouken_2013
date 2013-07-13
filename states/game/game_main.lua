@@ -15,6 +15,8 @@ function Main:enteredState()
   MOAIRenderMgr.pushRenderPass(self.main_layer)
 
   self:set_up_physics()
+  self:set_up_bounds(self.up_world)
+  self:set_up_bounds(self.down_world)
 
   self.up_player = Player:new(self.up_world, {1, 0, 0, 1})
   self.down_player = Player:new(self.down_world, {0, 0, 1, 1})
@@ -34,32 +36,27 @@ function Main:enteredState()
   local function gen_all_towers(world, up, owner)
     local y_sign = up and 1 or -1
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset, (44 + tower_offset) * y_sign)
+      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + tower_offset / 2, (44 + tower_offset * 2) * y_sign)
+      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20 + tower_offset / 2, (44 + tower_offset * 2) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset, (44 + tower_offset * 3) * y_sign)
+      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset * 3) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + tower_offset / 2, (44 + tower_offset * 4) * y_sign)
+      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20 + tower_offset / 2, (44 + tower_offset * 4) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset, (44 + tower_offset * 5) * y_sign)
-      self.towers[tower] = tower
-      owner.towers[tower] = tower
-    end
-    for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + tower_offset / 2, (44 + tower_offset * 6) * y_sign)
+      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset * 5) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
@@ -95,6 +92,17 @@ function Main:set_up_physics()
   self.down_world:setUnitsToMeters(0.25)
   self.down_world:start()
   self.down_layer:setBox2DWorld(self.down_world)
+end
+
+function Main:set_up_bounds(world)
+  local body = world:addBody(MOAIBox2DBody.STATIC)
+  local w, h = 25, 25
+  body:setTransform(-SCREEN_UNITS_X / 2 - w, 0)
+  local fixture = body:addRect(0, 0, w, SCREEN_UNITS_Y)
+
+  body = world:addBody(MOAIBox2DBody.STATIC)
+  body:setTransform(SCREEN_UNITS_X / 2, 0)
+  fixture = body:addRect(0, 0, w, SCREEN_UNITS_Y)
 end
 
 function Main:update(dt)

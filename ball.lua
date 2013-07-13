@@ -17,7 +17,7 @@ end
 function Ball:set_up_physics()
   local body = self.world:addBody(MOAIBox2DBody.DYNAMIC)
   local fixture = body:addCircle(self.origin.x, self.origin.y, Ball.RADIUS)
-  fixture:setDensity(1)
+  fixture:setDensity(0.01)
   fixture:setFriction(0.3)
   fixture:setRestitution(0.5)
   fixture:setFilter(3, 3)

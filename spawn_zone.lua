@@ -34,7 +34,8 @@ end
 
 function SpawnZone:clicked(x, y)
   local ball = Ball:new(self.world, x, y)
-  ball.body:applyAngularImpulse(2000)
+  local _, force_y = self.world:getGravity()
+  ball.body:setLinearVelocity(0, force_y * 5)
   self.player.balls[ball] = ball
 
   beholder.trigger("ball_spawned", ball)

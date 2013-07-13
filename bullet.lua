@@ -41,7 +41,7 @@ function Bullet:destroy()
 end
 
 function Bullet:on_collide_with_ball(phase, fixtureA, fixtureB, arbiter)
-  print("collision", Bullet.fixtures[fixtureA], Ball.fixtures[fixtureB])
+  -- print("collision", Bullet.fixtures[fixtureA], Ball.fixtures[fixtureB])
   local ball = Ball.fixtures[fixtureB]
 
   self:destroy()

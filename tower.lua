@@ -16,16 +16,16 @@ function Tower:initialize(world, x, y)
 end
 
 function Tower:set_up_physics()
-  body = self.world:addBody(MOAIBox2DBody.STATIC)
+  local body = self.world:addBody(MOAIBox2DBody.STATIC)
   body:setTransform(self.origin.x, self.origin.y)
-  fixture = body:addCircle(0, 0, self.radius)
+  local fixture = body:addCircle(0, 0, self.radius)
   fixture:setFilter(1, 1, -1)
 
   self.body = body
 end
 
 function Tower:contains(x, y)
-  return math.pow(x - self.origin.x, 2) + math.pow((y - self.origin.y), 2) < (self.radius * 2) ^ 2
+  return math.pow(x - self.origin.x, 2) + math.pow((y - self.origin.y), 2) < (self.radius * 3) ^ 2
 end
 
 function Tower:clicked()
