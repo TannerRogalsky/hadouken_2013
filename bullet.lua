@@ -2,14 +2,26 @@ Bullet = class('Bullet', Base)
 Bullet.static.RADIUS = 2
 Bullet.static.fixtures = {}
 
-function Bullet:initialize(world, x, y, force_x, force_y)
+function Bullet:initialize(player, x, y, force_x, force_y)
   Base.initialize(self)
 
-  self.world = world
+  self.player = player
+  self.world = player.world
+  self.layer = player.layer
   self.origin = {x = x, y = y}
 
   self:set_up_physics()
   self.body:applyForce(force_x, force_y)
+
+  local texture = MOAIGfxQuad2D.new ()
+  texture:setTexture ( 'images/towerSplash.png' )
+  texture:setRect ( -2, -2, 2, 2 )
+
+  local sprite = MOAIProp2D.new ()
+  sprite:setDeck ( texture )
+  sprite:setParent ( self.body )
+  self.layer:insertProp ( sprite )
+  self.sprite = sprite
 
   self.clean_up_timer = cron.after(3, self.destroy, self)
 end
@@ -36,6 +48,7 @@ end
 
 function Bullet:destroy()
   self.body:destroy()
+  self.layer:removeProp(self.sprite)
   cron.cancel(self.clean_up_timer)
   Bullet.fixtures[self.fixture] = nil
 end

@@ -1,6 +1,9 @@
 local Main = Game:addState('Main')
 
 function Main:enteredState()
+  self.main_layer = MOAILayer2D.new()
+  self.main_layer:setViewport(self.viewport)
+  MOAIRenderMgr.pushRenderPass(self.main_layer)
 
   self.up_layer = MOAILayer2D.new()
   self.up_layer:setViewport(self.viewport)
@@ -10,16 +13,12 @@ function Main:enteredState()
   self.down_layer:setViewport(self.viewport)
   MOAIRenderMgr.pushRenderPass(self.down_layer)
 
-  self.main_layer = MOAILayer2D.new()
-  self.main_layer:setViewport(self.viewport)
-  MOAIRenderMgr.pushRenderPass(self.main_layer)
-
   self:set_up_physics()
   self:set_up_bounds(self.up_world)
   self:set_up_bounds(self.down_world)
 
-  self.up_player = Player:new(self.up_world, {1, 0, 0, 1})
-  self.down_player = Player:new(self.down_world, {0, 0, 1, 1})
+  self.up_player = Player:new(self.up_world, {1, 0, 0, 1}, self.up_layer)
+  self.down_player = Player:new(self.down_world, {0, 0, 1, 1}, self.down_layer)
 
   self.fps_textbox = MOAITextBox.new()
   self.fps_textbox:setFont(self.font)
@@ -33,36 +32,36 @@ function Main:enteredState()
   self.towers = {}
   local num_towers = 10
   local tower_offset = 75
-  local function gen_all_towers(world, up, owner)
+  local function gen_all_towers(up, owner)
     local y_sign = up and 1 or -1
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset) * y_sign)
+      local tower = Tower:new(owner, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20 + tower_offset / 2, (44 + tower_offset * 2) * y_sign)
+      local tower = Tower:new(owner, (i - 1 - num_towers / 2) * tower_offset + 20 + tower_offset / 2, (44 + tower_offset * 2) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset * 3) * y_sign)
+      local tower = Tower:new(owner, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset * 3) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20 + tower_offset / 2, (44 + tower_offset * 4) * y_sign)
+      local tower = Tower:new(owner, (i - 1 - num_towers / 2) * tower_offset + 20 + tower_offset / 2, (44 + tower_offset * 4) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
     for i=1,num_towers do
-      local tower = Tower:new(world, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset * 5) * y_sign)
+      local tower = Tower:new(owner, (i - 1 - num_towers / 2) * tower_offset + 20, (44 + tower_offset * 5) * y_sign)
       self.towers[tower] = tower
       owner.towers[tower] = tower
     end
   end
-  gen_all_towers(self.up_world, true, self.up_player)
-  gen_all_towers(self.down_world, false, self.down_player)
+  gen_all_towers(true, self.up_player)
+  gen_all_towers(false, self.down_player)
 
   self.clickable_entities = {}
   for _,tower in pairs(self.towers) do
@@ -85,24 +84,32 @@ function Main:set_up_physics()
   self.up_world:setGravity(0, 10)
   self.up_world:setUnitsToMeters(0.25)
   self.up_world:start()
-  self.up_layer:setBox2DWorld(self.up_world)
+  -- self.up_layer:setBox2DWorld(self.up_world)
 
   self.down_world = MOAIBox2DWorld.new()
   self.down_world:setGravity(0, -10)
   self.down_world:setUnitsToMeters(0.25)
   self.down_world:start()
-  self.down_layer:setBox2DWorld(self.down_world)
+  -- self.down_layer:setBox2DWorld(self.down_world)
 end
 
 function Main:set_up_bounds(world)
   local body = world:addBody(MOAIBox2DBody.STATIC)
   local w, h = 25, 25
-  body:setTransform(-SCREEN_UNITS_X / 2 - w, 0)
+  body:setTransform(-SCREEN_UNITS_X / 2 - w, -SCREEN_UNITS_Y / 2)
   local fixture = body:addRect(0, 0, w, SCREEN_UNITS_Y)
 
   body = world:addBody(MOAIBox2DBody.STATIC)
-  body:setTransform(SCREEN_UNITS_X / 2, 0)
+  body:setTransform(SCREEN_UNITS_X / 2, -SCREEN_UNITS_Y / 2)
   fixture = body:addRect(0, 0, w, SCREEN_UNITS_Y)
+
+  body = world:addBody(MOAIBox2DBody.STATIC)
+  body:setTransform(0, -SCREEN_UNITS_Y / 2)
+  fixture = body:addRect(-SCREEN_UNITS_X / 2, -h, SCREEN_UNITS_X / 2, 0)
+
+  body = world:addBody(MOAIBox2DBody.STATIC)
+  body:setTransform(0, SCREEN_UNITS_Y / 2)
+  fixture = body:addRect(-SCREEN_UNITS_X / 2, 0, SCREEN_UNITS_X / 2, h)
 end
 
 function Main:update(dt)

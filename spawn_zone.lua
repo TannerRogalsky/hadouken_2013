@@ -17,8 +17,24 @@ function SpawnZone:initialize(player, x, y)
   scriptDeck:setRect(-self.width / 2, -self.height / 2, self.width / 2, self.height / 2)
   scriptDeck:setDrawCallback(function(index,xOff,yOff,xFlip,yFlip) self:render(index,xOff,yOff,xFlip,yFlip) end)
 
+  local texture = MOAIGfxQuad2D.new ()
+  if self.player.up then
+    texture:setTexture ( 'images/launcherRed_flash.png' )
+  else
+    texture:setTexture ( 'images/launcherGreen_flash.png' )
+  end
+  texture:setRect (-self.width / 2, -self.height / 2, self.width / 2, self.height / 2)
+
   self.prop = MOAIProp2D.new()
-  self.prop:setDeck(scriptDeck)
+  self.prop:setDeck(texture)
+  self.prop:setLoc(self.x + self.width / 2, self.y + self.height / 2)
+  local y_sign = self.player.up and 1 or -1
+  self.prop:setScl(1, y_sign * 2.5)
+
+
+  -- self.debug_prop = MOAIProp2D.new()
+  -- self.debug_prop:setDeck(scriptDeck)
+  -- self.player.layer:insertProp(self.debug_prop)
 end
 
 function SpawnZone:render(index, xOff, yOff, xFlip, yFlip)
@@ -33,7 +49,7 @@ function SpawnZone:contains(x, y)
 end
 
 function SpawnZone:clicked(x, y)
-  local ball = Ball:new(self.world, x, y)
+  local ball = Ball:new(self.player, x, y)
   local _, force_y = self.world:getGravity()
   ball.body:setLinearVelocity(0, force_y * 5)
   self.player.balls[ball] = ball

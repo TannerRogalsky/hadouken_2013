@@ -21,6 +21,12 @@ function Gun:enteredState()
       self:shoot_at(ball)
     end
   end)
+
+  local texture = MOAIGfxQuad2D.new ()
+  texture:setTexture ( 'images/towerShoot.png' )
+  texture:setRect ( -12, -12, 12, 12 )
+
+  self.sprite:setDeck ( texture )
 end
 
 function Gun:shoot_at(target)
@@ -41,7 +47,7 @@ function Gun:fire()
   local fx, fy = component_vectors(center_x, center_y, tx, ty)
 
   local speed = 20
-  local bullet = Bullet:new(self.world, center_x, center_y, speed * fx, speed * fy)
+  local bullet = Bullet:new(self.player, center_x, center_y, speed * fx, speed * fy)
 end
 
 function Gun:clear_target()

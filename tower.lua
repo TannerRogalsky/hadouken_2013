@@ -5,14 +5,26 @@ Tower:include(Clickable)
 
 Tower.static.RADIUS = 10
 
-function Tower:initialize(world, x, y)
+function Tower:initialize(player, x, y)
   Base.initialize(self)
 
-  self.world = world
+  self.player = player
+  self.world = player.world
+  self.layer = player.layer
   self.origin = {x = x, y = y}
   self.radius = Tower.RADIUS
 
   self:set_up_physics()
+
+  local texture = MOAIGfxQuad2D.new ()
+  texture:setTexture ( 'images/peg.png' )
+  texture:setRect ( -12, -12, 12, 12 )
+
+  local sprite = MOAIProp2D.new ()
+  sprite:setDeck ( texture )
+  sprite:setParent ( self.body )
+  self.layer:insertProp ( sprite )
+  self.sprite = sprite
 end
 
 function Tower:set_up_physics()
