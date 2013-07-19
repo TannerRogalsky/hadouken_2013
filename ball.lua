@@ -11,6 +11,8 @@ function Ball:initialize(player, x, y)
   self.layer = player.layer
   self.origin = {x = x, y = y}
 
+  self.health = 5
+
   self:set_up_physics()
 
   local texture = MOAIGfxQuad2D.new ()

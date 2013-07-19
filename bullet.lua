@@ -58,7 +58,12 @@ function Bullet:on_collide_with_ball(phase, fixtureA, fixtureB, arbiter)
   local ball = Ball.fixtures[fixtureB]
 
   self:destroy()
-  ball:destroy()
   sfxPop:play()
-  beholder.trigger("ball_destroyed", ball)
+
+  ball.health = ball.health - 1
+
+  if ball.health <= 0 then
+    ball:destroy()
+    beholder.trigger("ball_destroyed", ball)
+  end
 end
