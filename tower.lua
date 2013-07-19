@@ -33,6 +33,13 @@ function Tower:set_up_physics()
   local fixture = body:addCircle(0, 0, self.radius)
   fixture:setFilter(1, 1, -1)
 
+  local function on_collide_with_ball( phase, fixtureA, fixtureB, arbiter )
+   -- sfx: Tower & Ball Collision
+    sfxPeg:play()
+  end
+
+  fixture:setCollisionHandler ( on_collide_with_ball, MOAIBox2DArbiter.BEGIN, 2)
+
   self.body = body
 end
 
@@ -41,5 +48,6 @@ function Tower:contains(x, y)
 end
 
 function Tower:clicked()
+  sfxBuild:play()
   self:gotoState("Gun")
 end

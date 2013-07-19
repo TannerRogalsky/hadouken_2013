@@ -53,6 +53,6 @@ function SpawnZone:clicked(x, y)
   local _, force_y = self.world:getGravity()
   ball.body:setLinearVelocity(0, force_y * 5)
   self.player.balls[ball] = ball
-
+  sfxLaunch:play()
   beholder.trigger("ball_spawned", ball)
 end

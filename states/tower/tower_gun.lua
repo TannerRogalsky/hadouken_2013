@@ -48,6 +48,7 @@ function Gun:fire()
 
   local speed = 20
   local bullet = Bullet:new(self.player, center_x, center_y, speed * fx, speed * fy)
+  sfxShoot:play()
 end
 
 function Gun:clear_target()
