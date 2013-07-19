@@ -98,18 +98,22 @@ function Main:set_up_bounds(world)
   local w, h = 25, 25
   body:setTransform(-SCREEN_UNITS_X / 2 - w, -SCREEN_UNITS_Y / 2)
   local fixture = body:addRect(0, 0, w, SCREEN_UNITS_Y)
+  fixture:setFilter(1, 1, -1)
 
   body = world:addBody(MOAIBox2DBody.STATIC)
   body:setTransform(SCREEN_UNITS_X / 2, -SCREEN_UNITS_Y / 2)
   fixture = body:addRect(0, 0, w, SCREEN_UNITS_Y)
+  fixture:setFilter(1, 1, -1)
 
   body = world:addBody(MOAIBox2DBody.STATIC)
   body:setTransform(0, -SCREEN_UNITS_Y / 2)
   fixture = body:addRect(-SCREEN_UNITS_X / 2, -h, SCREEN_UNITS_X / 2, 0)
+  fixture:setFilter(1, 1, -1)
 
   body = world:addBody(MOAIBox2DBody.STATIC)
   body:setTransform(0, SCREEN_UNITS_Y / 2)
   fixture = body:addRect(-SCREEN_UNITS_X / 2, 0, SCREEN_UNITS_X / 2, h)
+  fixture:setFilter(1, 1, -1)
 end
 
 function Main:update(dt)
